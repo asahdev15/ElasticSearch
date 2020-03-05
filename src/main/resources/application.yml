@@ -1,0 +1,40 @@
+server:
+  servlet:
+    context-path: /api/v1
+    
+spring:
+  autoconfigure.exclude: org.springframework.boot.actuate.autoconfigure.elasticsearch.ElasticSearchRestHealthIndicatorAutoConfiguration
+  profiles.active: production
+  data:
+    elasticsearch:
+      repositories:
+        enabled: true
+      cluster-name: asahdev
+      cluster-nodes:  localhost:9300
+
+elasticsearch:
+  transport:
+    ping_timeout: 60
+    nodes_sampler_interval: 60
+  indexes:
+    nodeinstanceWithAttributeHistory: poc-unit-nodeinstance-attributehistory-v1
+    nodeinstance: poc-unit-nodeinstance-v1
+    nodeinstance_attribute_history: poc-unit-attributehistory-v1
+    book: index_book
+    user: index_user
+  aliases:
+    nodeinstanceWithAttributeHistory: poc-unit-nodeinstance-attributehistory
+    nodeinstance: poc-unit-nodeinstance
+    nodeinstance_attribute_history: poc-unit-attributehistory
+    book: index_book_alias
+    user: index_user_alias
+  ip: localhost
+  port: 9300
+  cluster:  asahdev
+  user: elastic
+  password: changeme
+
+management.endpoint.health.show-details: ALWAYS
+management.health.elasticsearch.indices: index-user
+management.health.elasticsearch.response-timeout: 1000
+

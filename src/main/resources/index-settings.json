@@ -1,0 +1,12 @@
+{
+	"index": {
+		"max_result_window": "2147483647",
+		"analysis": {
+			"analyzer": {
+				"default": {
+					"type": "keyword"
+				}
+			}
+		}
+	}
+}
