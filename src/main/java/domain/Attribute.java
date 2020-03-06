@@ -19,14 +19,10 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class AttributeData
+public class Attribute
 {
+
    private String value;
    private String dataType;
-   @DateTimeFormat(iso = ISO.DATE_TIME)
-   @Field(type = FieldType.Date)
-   private Date startDate;
-   @DateTimeFormat(iso = ISO.DATE_TIME)
-   @Field(type = FieldType.Date)
-   private Date endDate;
+
 }

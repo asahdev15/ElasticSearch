@@ -34,10 +34,11 @@ public class ElasticSearchConfiguration
          }
          catch (NoNodeAvailableException e)
          {
-            log.error("Error while doing query to elasticsearch retrying;{};after;{};ms", e.getMessage(), CONNECTION_RETRY_WAIT_IN_MILLIS);
+            log.error("Error while doing query to elasticsearch retrying ; {} ; after ; {} ; ms",
+                    e.getMessage(), CONNECTION_RETRY_WAIT_IN_MILLIS);
             Thread.sleep(CONNECTION_RETRY_WAIT_IN_MILLIS);
             if (i == MAX_ELASTIC_CONNECTION_RETRY)
-               throw new RuntimeException("Max Retry Reached for connection to Elastic;" + MAX_ELASTIC_CONNECTION_RETRY, e);
+               throw new RuntimeException("Max Retry Reached for connection to Elastic ; "  + MAX_ELASTIC_CONNECTION_RETRY, e);
             continue;
          }
          break;
@@ -46,35 +47,12 @@ public class ElasticSearchConfiguration
 
    private void createIndexWithAlias(ElasticsearchTemplate elasticsearchTemplate, String indexSetting)
    {
-      createIndexWithAlias(elasticsearchTemplate,
-                           elasticIndexSetting.getUnitNodeInstanceWithAttributeHistoryIndexName(),
-                           elasticIndexSetting.getUnitNodeInstanceWithAttributeHistoryAliasName(),
-                           indexSetting,
-                           NodeInstanceEntityWithAttributeHistory.class);
-
-      createIndexWithAlias(elasticsearchTemplate,
-                           elasticIndexSetting.getUnitNodeInstanceIndexName(),
-                           elasticIndexSetting.getUnitNodeInstanceAliasName(),
-                           indexSetting,
-                           NodeInstanceEntity.class);
-
-      createIndexWithAlias(elasticsearchTemplate,
-                           elasticIndexSetting.getUnitAttributeHistoryIndexName(),
-                           elasticIndexSetting.getUnitAttributeHistoryAliasName(),
-                           indexSetting,
-                           AttributeHistoryEntity.class);
-
-      createIndexWithAlias(elasticsearchTemplate,
-              elasticIndexSetting.getBookIndex(),
-              elasticIndexSetting.getBookIndexAlias(),
+      createIndexWithAlias(
+              elasticsearchTemplate,
+              elasticIndexSetting.getCustomerIndex(),
+              elasticIndexSetting.getCustomerIndexAlias(),
               indexSetting,
-              Book.class);
-
-      createIndexWithAlias(elasticsearchTemplate,
-              elasticIndexSetting.getUserIndex(),
-              elasticIndexSetting.getUserIndexAlias(),
-              indexSetting,
-              User.class);
+              Customer.class);
    }
 
    private void createIndexWithAlias(ElasticsearchTemplate elasticsearchTemplate, String indexName, String aliasName, String indexSetting, Class<?> clazz)
@@ -82,18 +60,20 @@ public class ElasticSearchConfiguration
       if (!elasticsearchTemplate.indexExists(aliasName))
       {
          if (!elasticsearchTemplate.indexExists(indexName))
-         {
             elasticsearchTemplate.createIndex(indexName, indexSetting);
-         }
+
          AliasQuery query = new AliasQuery();
          query.setIndexName(indexName);
          query.setAliasName(aliasName);
+
          elasticsearchTemplate.addAlias(query);
       }
-      if (!elasticsearchTemplate.typeExists(elasticsearchTemplate.getPersistentEntityFor(clazz).getIndexName(),
-         elasticsearchTemplate.getPersistentEntityFor(clazz).getIndexType()))
-      {
+
+      if (!elasticsearchTemplate.typeExists(
+              elasticsearchTemplate.getPersistentEntityFor(clazz).getIndexName(),
+              elasticsearchTemplate.getPersistentEntityFor(clazz).getIndexType()))
          elasticsearchTemplate.putMapping(clazz);
-      }
+
    }
+
 }

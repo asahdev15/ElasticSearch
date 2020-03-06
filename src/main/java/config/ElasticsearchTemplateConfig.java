@@ -1,8 +1,5 @@
 package config;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
@@ -14,10 +11,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
-import org.springframework.data.elasticsearch.core.EntityMapper;
-import org.springframework.data.elasticsearch.core.geo.CustomGeoModule;
-
-import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.concurrent.TimeUnit;
@@ -25,8 +18,8 @@ import java.util.concurrent.TimeUnit;
 @Configuration
 public class ElasticsearchTemplateConfig
 {
+
    @Profile("!test")
-   @SuppressWarnings("resource")
    @Bean
    public TransportClient transportClient(
       @Value("${elasticsearch.ip}") String host,
@@ -38,6 +31,7 @@ public class ElasticsearchTemplateConfig
       @Value("${elasticsearch.password}") String password)
       throws UnknownHostException
    {
+
       Builder builder = Settings.builder()
                                    .put("cluster.name", cluster)
                                    .put("client.transport.ping_timeout", clientPingTimeout, TimeUnit.SECONDS)
@@ -58,62 +52,12 @@ public class ElasticsearchTemplateConfig
       return elasticsearchTemplate;
    }
 
-   public static class CustomEntityMapper implements EntityMapper
-   {
-      private final ObjectMapper objectMapper;
-
-      public CustomEntityMapper()
-      {
-         objectMapper = new ObjectMapper();
-         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-         objectMapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
-         objectMapper.registerModule(new CustomGeoModule());
-         objectMapper.registerModule(new JavaTimeModule());
-      }
-
-      @Override
-      public String mapToString(Object object) throws IOException
-      {
-         return objectMapper.writeValueAsString(object);
-      }
-
-      @Override
-      public <T> T mapToObject(String source, Class<T> clazz) throws IOException
-      {
-         return objectMapper.readValue(source, clazz);
-      }
-   }
-
    @Bean
    public ElasticIndexSetting elasticSearchIndexSetting(
-      @Value("${elasticsearch.indexes.nodeinstanceWithAttributeHistory}") String unitNodeInstanceWithAttributeHistoryIndexName,
-      @Value("${elasticsearch.aliases.nodeinstanceWithAttributeHistory}") String unitNodeInstanceWithAttributeHistoryAliasName,
-
-      @Value("${elasticsearch.indexes.nodeinstance}") String unitNodeInstanceIndexName,
-      @Value("${elasticsearch.aliases.nodeinstance}") String unitNodeInstanceAliasName,
-
-      @Value("${elasticsearch.indexes.nodeinstance_attribute_history}") String unitAttributeHistoryIndexName,
-      @Value("${elasticsearch.aliases.nodeinstance_attribute_history}") String unitAttributeHistoryAliasName,
-
-      @Value("${elasticsearch.indexes.book}") String bookIndex,
-      @Value("${elasticsearch.aliases.book}") String bookIndexAlias,
-
-      @Value("${elasticsearch.indexes.user}") String userIndex,
-      @Value("${elasticsearch.aliases.user}") String userIndexAlias)
+      @Value("${elasticsearch.indexes.customer}") String customerIndex,
+      @Value("${elasticsearch.aliases.customer}") String customerIndexAlias)
    {
-      return new ElasticIndexSetting( unitNodeInstanceWithAttributeHistoryIndexName,
-                                      unitNodeInstanceWithAttributeHistoryAliasName,
-
-                                      unitNodeInstanceIndexName,
-                                      unitNodeInstanceAliasName,
-
-                                      unitAttributeHistoryIndexName,
-                                      unitAttributeHistoryAliasName,
-
-                                      bookIndex,
-                                      bookIndexAlias,
-
-                                      userIndex,
-                                      userIndexAlias);
+      return new ElasticIndexSetting(customerIndex, customerIndexAlias);
    }
+
 }
