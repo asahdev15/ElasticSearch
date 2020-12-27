@@ -1,8 +1,4 @@
 
-import asahdev.utils.JsonUtils;
-import com.google.common.collect.Lists;
-import domain.Attribute;
-import domain.Customer;
 import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
@@ -15,26 +11,24 @@ public class ElasticSearchTest
 
    public static void main(String[] args) {
 
-      Customer customerNew = Customer.builder()
-              .id("1")
-              .firstName("Ashish")
-              .lastName("Sahdev")
-              .address("Delhi")
-              .age(10)
-              .phone(0000000000)
-              .startDate(new Date())
-              .endDate(new Date())
-              .updateDate(new Date())
-              .attributes(Lists.newArrayList(Attribute.builder().dataType("String").value("x1").build(),
-                      Attribute.builder().dataType("String").value("x2").build()))
-              .build();
-
-
-
-//      BoolQueryBuilder query = QueryBuilders.boolQuery();
-//      query.must(QueryBuilders.rangeQuery("updateDate").lte(95617584000000L));
-//      query.must(QueryBuilders.termQuery("status", "Terminated"));
-      System.out.print(JsonUtils.convertToJson(customerNew));
+//      User customerNew = User.builder()
+//              .id("1")
+//              .firstName("Ashish")
+//              .lastName("Sahdev")
+//              .address("Delhi")
+//              .startDate(new Date())
+//              .endDate(new Date())
+//              .updateDate(new Date())
+//              .attributes(Lists.newArrayList(Attribute.builder().dataType("String").value("x1").build(),
+//                      Attribute.builder().dataType("String").value("x2").build()))
+//              .build();
+//
+//
+//
+////      BoolQueryBuilder query = QueryBuilders.boolQuery();
+////      query.must(QueryBuilders.rangeQuery("updateDate").lte(95617584000000L));
+////      query.must(QueryBuilders.termQuery("status", "Terminated"));
+//      System.out.print(JsonUtils.convertToJson(customerNew));
    }
 
    private static void printQuery_NodeInstanceID_AttName_AttValue_Time() {

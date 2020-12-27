@@ -1,6 +1,6 @@
 package config;
 
-import domain.*;
+import asahdev.models.User;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.client.transport.NoNodeAvailableException;
@@ -52,7 +52,7 @@ public class ElasticSearchConfiguration
               elasticIndexSetting.getCustomerIndex(),
               elasticIndexSetting.getCustomerIndexAlias(),
               indexSetting,
-              Customer.class);
+              User.class);
    }
 
    private void createIndexWithAlias(ElasticsearchTemplate elasticsearchTemplate, String indexName, String aliasName, String indexSetting, Class<?> clazz)

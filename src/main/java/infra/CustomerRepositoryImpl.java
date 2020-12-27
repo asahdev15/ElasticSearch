@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import domain.Customer;
+import asahdev.models.User;
 import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -24,7 +24,7 @@ import org.springframework.data.elasticsearch.core.query.UpdateQuery;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
-public class CustomerRepositoryImpl implements CustomerRepository<Customer>
+public class CustomerRepositoryImpl implements CustomerRepository<User>
 {
    private ElasticsearchTemplate elasticsearchTemplate;
 
@@ -40,17 +40,17 @@ public class CustomerRepositoryImpl implements CustomerRepository<Customer>
 
    @Override
    public void refresh() {
-      elasticsearchTemplate.refresh(Customer.class);
+      elasticsearchTemplate.refresh(User.class);
    }
 
    @Override
-   public void save(Customer modelObjects) {
+   public void save(User modelObjects) {
       IndexQuery indexQuery = new IndexQueryBuilder().withObject(modelObjects).build();
       elasticsearchTemplate.index(indexQuery);
    }
 
    @Override
-   public void saveAll(List<Customer> modelObjects) {
+   public void saveAll(List<User> modelObjects) {
       if (!modelObjects.isEmpty())
       {
          List<IndexQuery> list = Lists.newArrayList();
@@ -69,39 +69,39 @@ public class CustomerRepositoryImpl implements CustomerRepository<Customer>
    }
 
    @Override
-   public Page<Customer> searchAll(int limit, int offset){
+   public Page<User> searchAll(int limit, int offset){
       int pageNo = offset / limit;
       BoolQueryBuilder query = QueryBuilders.boolQuery().must(QueryBuilders.matchAllQuery());
       NativeSearchQueryBuilder builder = new NativeSearchQueryBuilder().withQuery(query).withPageable(PageRequest.of(pageNo, limit));
-      return elasticsearchTemplate.queryForPage(builder.build(), Customer.class);
+      return elasticsearchTemplate.queryForPage(builder.build(), User.class);
    }
 
    @Override
-   public Optional<Customer> searchById(String id) {
+   public Optional<User> searchById(String id) {
       GetQuery getQuery = new GetQuery();
       getQuery.setId(id);
-      return Optional.ofNullable(elasticsearchTemplate.queryForObject(getQuery, Customer.class));
+      return Optional.ofNullable(elasticsearchTemplate.queryForObject(getQuery, User.class));
    }
 
    @Override
-   public List<Customer> searchByNameOrAge(String firstName, String lastName, Integer age, long time, int limit, int offset){
+   public List<User> searchByNameOrAge(String firstName, String lastName, Integer age, long time, int limit, int offset){
       BoolQueryBuilder query = QueryBuilders.boolQuery().must(termQuery(ConstantsUtility.ES_FIELD_NAME, firstName));
       NativeSearchQueryBuilder builder = new NativeSearchQueryBuilder().withQuery(query);
-      return elasticsearchTemplate.queryForList(builder.build(), Customer.class);
+      return elasticsearchTemplate.queryForList(builder.build(), User.class);
    }
 
    @Override
-   public List<Customer> searchByTime(long time, int limit, int offset){
+   public List<User> searchByTime(long time, int limit, int offset){
       BoolQueryBuilder query = QueryBuilders.boolQuery()
               .must(QueryBuilders.rangeQuery(ConstantsUtility.ES_FIELD_START_DATE_NAME).lte(time))
               .must(QueryBuilders.rangeQuery(ConstantsUtility.ES_FIELD_UPDATE_DATE_NAME).gte(time));
       int pageNo = offset / limit;
       NativeSearchQueryBuilder builder = new NativeSearchQueryBuilder().withQuery(query).withPageable(PageRequest.of(pageNo, limit));
-      return elasticsearchTemplate.queryForList(builder.build(), Customer.class);
+      return elasticsearchTemplate.queryForList(builder.build(), User.class);
    }
 
    @Override
-   public List<Customer> searchByAttributes(Map<String, String> attributes, int limit, int offset)
+   public List<User> searchByAttributes(Map<String, String> attributes, int limit, int offset)
    {
       BoolQueryBuilder query = QueryBuilders.boolQuery();
       attributes.forEach((k,v) ->
@@ -115,7 +115,7 @@ public class CustomerRepositoryImpl implements CustomerRepository<Customer>
       );
       int pageNo = offset / limit;
       NativeSearchQueryBuilder builder = new NativeSearchQueryBuilder().withQuery(query).withPageable(PageRequest.of(pageNo, limit));
-      return elasticsearchTemplate.queryForList(builder.build(), Customer.class);
+      return elasticsearchTemplate.queryForList(builder.build(), User.class);
    }
 
    @Override
@@ -124,7 +124,7 @@ public class CustomerRepositoryImpl implements CustomerRepository<Customer>
          for (List<String> idsToBeDeleted : Iterables.partition(ids, ConstantsUtility.MAX_FETCH_SIZE))
          {
             CriteriaQuery criteriaQuery = new CriteriaQuery(new Criteria(ConstantsUtility.ES_FIELD_ID).in(idsToBeDeleted));
-            elasticsearchTemplate.delete(criteriaQuery, Customer.class);
+            elasticsearchTemplate.delete(criteriaQuery, User.class);
 //            elasticsearchTemplate.delete(criteriaQuery, Attribute.class);
          }
       }

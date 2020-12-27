@@ -1,6 +1,6 @@
 package config;
 
-import domain.Customer;
+import asahdev.models.User;
 import infra.CustomerRepository;
 import infra.CustomerRepositoryImpl;
 import org.springframework.context.annotation.Bean;
@@ -12,7 +12,7 @@ public class RepositoryConfig
 {
 
    @Bean
-   public CustomerRepository<Customer> getCustomerRepository(ElasticsearchTemplate elasticsearchTemplate)
+   public CustomerRepository<User> getCustomerRepository(ElasticsearchTemplate elasticsearchTemplate)
    {
       return new CustomerRepositoryImpl(elasticsearchTemplate);
    }

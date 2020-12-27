@@ -7,7 +7,7 @@ import javax.annotation.PostConstruct;
 
 @Slf4j
 @SpringBootApplication
-@ComponentScan(basePackages = { "config", "domain", "infra", "rest", "services", "repo" })
+@ComponentScan(basePackages = { "config", "infra", "rest", "services", "repo" })
 public class ElasticSearchApplication
 {
    public static void main(String[] args)
